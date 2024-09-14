@@ -12,7 +12,14 @@ abort() {
 }
 
 check_info_plist() {
-	[[ -r "info.plist" ]] || abort "Missing file info.plist"
+	INFO_PLIST=""
+	if [[ -r "$WORKFLOW_DIR/info.plist" ]]; then
+		INFO_PLIST="$WORKFLOW_DIR/info.plist"
+	elif [[ -r "info.plist" ]]; then
+		INFO_PLIST="info.plist"
+	else
+		abort "Missing file info.plist"
+	fi
 }
 
 check_workflow_dir() {
@@ -60,7 +67,7 @@ set_output() {
 check_info_plist
 check_workflow_dir
 
-OUTPUT_FILE="${PWD}/$(/extract_name.py info.plist)"
+OUTPUT_FILE="${PWD}/$(/extract_name.py $INFO_PLIST)"
 
 clean
 zip_dir $WORKFLOW_DIR
